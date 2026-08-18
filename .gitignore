@@ -46,3 +46,4 @@ sbx-claude-allow.txt
 sbx-claude-settings.json
 sbx-claude.sh
 .vscode/
+.venv-linux/

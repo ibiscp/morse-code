@@ -2,6 +2,8 @@ import { ImageResponse } from "next/og";
 
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
+// Render once at build time so the icon ships with the static export.
+export const dynamic = "force-static";
 
 // The favicon is the app's whole visual identity distilled to its
 // smallest unit: a dot and a dash, rendered as plain shapes (no font

@@ -15,6 +15,11 @@ interface MorseIllustrationProps {
 const LETTER_FRAMES = 5;
 const DIGIT_FRAMES = 6;
 
+// Raw asset URLs (unlike next/link or next/image) are not rewritten with the
+// deploy basePath automatically, so prefix them explicitly for sub-path hosts
+// like GitHub Pages.
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 // Renders one frame of the character's sprite sheet (frame 0 = plain
 // outline, frame N = N symbols highlighted), selected via a CSS
 // background-position step so the illustration can "build up" alongside
@@ -31,7 +36,7 @@ export function MorseIllustration({ letter, label, revealedCount, size = 80 }: M
       style={{
         width: size,
         height: size,
-        backgroundImage: `url(/images/morse/${letter.toUpperCase()}.png)`,
+        backgroundImage: `url(${BASE_PATH}/images/morse/${letter.toUpperCase()}.png)`,
         backgroundSize: `${totalFrames * 100}% 100%`,
         backgroundPosition: `${positionPercent}% 0%`,
         backgroundRepeat: "no-repeat",

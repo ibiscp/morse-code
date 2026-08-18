@@ -2,6 +2,8 @@ import { ImageResponse } from "next/og";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+// Render once at build time so the image ships with the static export.
+export const dynamic = "force-static";
 
 export default function OpengraphImage() {
   return new ImageResponse(
