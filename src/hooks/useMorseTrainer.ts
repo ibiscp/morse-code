@@ -44,6 +44,7 @@ export function useMorseTrainer() {
   const [correctCount, setCorrectCount] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [playbackIndex, setPlaybackIndex] = useState<number | null>(null);
+  const [isReplaying, setIsReplaying] = useState(false);
 
   useEffect(() => {
     playerRef.current = new MorseAudioPlayer();
@@ -70,6 +71,7 @@ export function useMorseTrainer() {
     (char: string) => {
       playbackTokenRef.current += 1;
       setPlaybackIndex(null);
+      setIsReplaying(false);
       if (char === SPACE_CHAR) return;
       void playerRef.current?.playChar(char, getSoundUnitMs());
     },
@@ -180,6 +182,7 @@ export function useMorseTrainer() {
       const fastUnit = getSoundUnitMs();
       const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 
+      setIsReplaying(true);
       await sleep(REPLAY_START_DELAY_MS);
 
       for (let i = 0; i < text.length; i++) {
@@ -196,10 +199,22 @@ export function useMorseTrainer() {
         }
       }
 
-      if (token === playbackTokenRef.current) setPlaybackIndex(null);
+      if (token === playbackTokenRef.current) {
+        setPlaybackIndex(null);
+        setIsReplaying(false);
+      }
     },
     [getSoundUnitMs]
   );
+
+  // Stops an in-progress phrase replay immediately, silencing the tone and
+  // clearing the highlight so the toggle button can flip back to "Replay".
+  const stopPhrase = useCallback(() => {
+    playbackTokenRef.current += 1;
+    playerRef.current?.stop();
+    setPlaybackIndex(null);
+    setIsReplaying(false);
+  }, []);
 
   useEffect(() => {
     if (status === "complete" && phrase) {
@@ -245,9 +260,11 @@ export function useMorseTrainer() {
     totalCount,
     accuracy,
     playbackIndex,
+    isReplaying,
     nextPhrase,
     replay,
     replayPhrase,
+    stopPhrase,
     showHint,
     playChar,
   };

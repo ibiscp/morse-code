@@ -17,9 +17,11 @@ export function MorseTrainer() {
     correctCount,
     totalCount,
     playbackIndex,
+    isReplaying,
     nextPhrase,
     replay,
     replayPhrase,
+    stopPhrase,
     showHint,
     playChar,
   } = useMorseTrainer();
@@ -42,10 +44,10 @@ export function MorseTrainer() {
         <StatsBar wpm={wpm} accuracy={accuracy} progress={correctCount} total={totalCount} />
         <div className="flex gap-4">
           <button
-            onClick={replayPhrase}
+            onClick={isReplaying ? stopPhrase : replayPhrase}
             className="rounded-full border border-line px-5 py-2 text-sm text-ink-muted transition-colors hover:border-ink-faint hover:text-ink"
           >
-            Replay phrase
+            {isReplaying ? "Stop" : "Replay phrase"}
           </button>
           <button
             onClick={nextPhrase}

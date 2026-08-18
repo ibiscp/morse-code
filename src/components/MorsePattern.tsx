@@ -10,7 +10,7 @@ interface MorsePatternProps {
 // increases, instead of showing the whole pattern at once.
 export function MorsePattern({ pattern, revealedCount }: MorsePatternProps) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex flex-wrap items-center justify-center gap-2">
       {pattern.map((symbol, i) => {
         const lit = i < revealedCount;
         const isDash = symbol === "-";
