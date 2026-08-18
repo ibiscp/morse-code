@@ -1,0 +1,16 @@
+Letters (A-Z): these illustrations originate from Google Creative Lab's
+morse-learn project, licensed under the Apache License 2.0 (see
+LICENSE.txt in this directory):
+
+  https://github.com/googlecreativelab/morse-learn
+
+Digits (0-9): these illustrations were created by zmorse and are not part
+of Google's original set:
+
+  https://github.com/zsphinxyz/zmorse
+
+All of the multi-frame sprite sheet versions used here (which "build up"
+the highlighted dot/dash shape frame by frame) were prepared by zmorse:
+
+  https://github.com/zsphinxyz/zmorse
+  https://zmorse.vercel.app

@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --color-surface: #fafafa;
+  --color-surface-2: #f0f0f1;
+  --color-line: #e4e4e7;
+  --color-ink: #18181b;
+  --color-ink-muted: #71717a;
+  --color-ink-faint: #a1a1aa;
+
+  --color-accent: #059669;
+  --color-accent-ink: #ffffff;
+
+  --color-hint-surface: #fffbeb;
+  --color-hint-line: #fde68a;
+  --color-hint-ink: #92400e;
+
+  --color-correct-surface: #ecfdf5;
+  --color-correct-line: #6ee7b7;
+  --color-correct-ink: #047857;
+
+  --color-incorrect-surface: #fef2f2;
+  --color-incorrect-line: #fca5a5;
+  --color-incorrect-ink: #b91c1c;
+
+  /* Same green as the lit dots/dashes below the illustration (--color-accent).
+     Not redefined in .dark, so it tracks whichever accent shade is active. */
+  --color-illustration-surface: var(--color-accent);
+  --color-illustration-shadow: rgba(5, 150, 105, 0.25);
+}
+
+.dark {
+  --color-surface: #09090b;
+  --color-surface-2: #18181b;
+  --color-line: #3f3f46;
+  --color-ink: #f4f4f5;
+  --color-ink-muted: #a1a1aa;
+  --color-ink-faint: #52525b;
+
+  --color-accent: #34d399;
+  --color-accent-ink: #052e1f;
+
+  --color-hint-surface: rgba(69, 39, 6, 0.35);
+  --color-hint-line: #92400e;
+  --color-hint-ink: #fbbf24;
+
+  --color-correct-surface: rgba(6, 78, 59, 0.4);
+  --color-correct-line: #065f46;
+  --color-correct-ink: #34d399;
+
+  --color-incorrect-surface: rgba(69, 10, 10, 0.4);
+  --color-incorrect-line: #7f1d1d;
+  --color-incorrect-ink: #f87171;
+
+  --color-illustration-shadow: rgba(52, 211, 153, 0.3);
+}
+
+@theme inline {
+  --color-surface: var(--color-surface);
+  --color-surface-2: var(--color-surface-2);
+  --color-line: var(--color-line);
+  --color-ink: var(--color-ink);
+  --color-ink-muted: var(--color-ink-muted);
+  --color-ink-faint: var(--color-ink-faint);
+
+  --color-accent: var(--color-accent);
+  --color-accent-ink: var(--color-accent-ink);
+
+  --color-hint-surface: var(--color-hint-surface);
+  --color-hint-line: var(--color-hint-line);
+  --color-hint-ink: var(--color-hint-ink);
+
+  --color-correct-surface: var(--color-correct-surface);
+  --color-correct-line: var(--color-correct-line);
+  --color-correct-ink: var(--color-correct-ink);
+
+  --color-incorrect-surface: var(--color-incorrect-surface);
+  --color-incorrect-line: var(--color-incorrect-line);
+  --color-incorrect-ink: var(--color-incorrect-ink);
+
+  --color-illustration-surface: var(--color-illustration-surface);
+  --color-illustration-shadow: var(--color-illustration-shadow);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-pop-in {
+  animation: pop-in 0.25s ease-out;
+}
