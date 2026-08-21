@@ -106,9 +106,9 @@ export function useMorseTrainer() {
     beginPhrase(getRandomPhrase());
   }, [beginPhrase]);
 
-  // Starts automatically on mount: navigating here from the menu already
-  // counts as the user gesture the browser needs to unlock audio, so no
-  // extra "Start" click is needed.
+  // Starts automatically on mount so no extra "Start" click is needed. On
+  // iOS audio stays locked until a real gesture, so the very first tone may
+  // be silent; MorseAudioPlayer unlocks on the first tap and replay works.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- deliberate one-time kickoff of audio + the first phrase on mount, not a derived-state sync
     void nextPhrase();

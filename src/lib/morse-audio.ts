@@ -3,6 +3,24 @@ import { getMorsePattern } from "./morse-code";
 const TONE_FREQUENCY_HZ = 600;
 const RAMP_SECONDS = 0.005; // short attack/release to avoid clicks
 
+// Minimal typings for APIs missing from the standard lib but present on iOS
+// Safari: the webkit-prefixed AudioContext (older iOS) and the Audio Session
+// API (iOS 16.4+), which lets us opt out of the hardware ring/silent switch.
+type WebkitWindow = typeof globalThis & {
+  webkitAudioContext?: typeof AudioContext;
+};
+
+type AudioSessionNavigator = Navigator & {
+  audioSession?: { type: string };
+};
+
+// Resolves the AudioContext constructor, falling back to the webkit-prefixed
+// one that older iOS Safari versions expose. Returns null when unsupported.
+function getAudioContextCtor(): typeof AudioContext | null {
+  if (typeof window === "undefined") return null;
+  return window.AudioContext ?? (window as WebkitWindow).webkitAudioContext ?? null;
+}
+
 // Plays Morse tones for a single character through the Web Audio API,
 // scheduling each dit/dah as a gain envelope on a shared oscillator.
 export class MorseAudioPlayer {
@@ -10,12 +28,51 @@ export class MorseAudioPlayer {
   private oscillator: OscillatorNode | null = null;
   private gain: GainNode | null = null;
   private playToken = 0;
+  private removeGestureUnlock: (() => void) | null = null;
 
   private ensureContext(): AudioContext {
     if (!this.ctx) {
-      this.ctx = new AudioContext();
+      const Ctor = getAudioContextCtor();
+      if (!Ctor) {
+        throw new Error("Web Audio API is not supported in this browser");
+      }
+      this.ctx = new Ctor();
+      // On iOS, Web Audio is silenced by the hardware ring/silent switch
+      // unless the page declares a "playback" audio session. Set it so
+      // learners still hear tones with the phone on silent.
+      const nav = navigator as AudioSessionNavigator;
+      if (nav.audioSession) {
+        try {
+          nav.audioSession.type = "playback";
+        } catch {
+          // Non-fatal: some browsers expose the property but reject writes.
+        }
+      }
+      this.registerGestureUnlock();
     }
     return this.ctx;
+  }
+
+  // iOS only unlocks audio inside a real user gesture; auto-playing on mount
+  // (page navigation) does not count. Resume the context on the first touch,
+  // click, or key press anywhere in the document so the first tone is heard.
+  private registerGestureUnlock(): void {
+    if (this.removeGestureUnlock || typeof document === "undefined") return;
+    const events = ["pointerdown", "touchend", "keydown"] as const;
+    const remove = () => {
+      for (const type of events) {
+        document.removeEventListener(type, unlock, true);
+      }
+      this.removeGestureUnlock = null;
+    };
+    const unlock = () => {
+      remove();
+      void this.resume();
+    };
+    for (const type of events) {
+      document.addEventListener(type, unlock, true);
+    }
+    this.removeGestureUnlock = remove;
   }
 
   async resume(): Promise<void> {
@@ -105,6 +162,7 @@ export class MorseAudioPlayer {
   }
 
   dispose(): void {
+    this.removeGestureUnlock?.();
     this.stop();
     this.oscillator?.stop();
     this.oscillator?.disconnect();
