@@ -267,5 +267,6 @@ export function useMorseTrainer() {
     stopPhrase,
     showHint,
     playChar,
+    submitChar,
   };
 }
