@@ -21,6 +21,12 @@ export default function Home() {
           Listen &amp; type
         </Link>
         <Link
+          href="/letters"
+          className="rounded-full border border-line px-8 py-3 font-semibold text-ink transition-colors hover:border-ink-faint"
+        >
+          Random letters
+        </Link>
+        <Link
           href="/send"
           className="rounded-full border border-line px-8 py-3 font-semibold text-ink transition-colors hover:border-ink-faint"
         >
